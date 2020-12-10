@@ -29,7 +29,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => '1b62d88bf76f07c19deef3e1a0ea86c3f96b9171',
+    'reference' => '478f6727aebc8686a2d407808946c198e4da9597',
     'name' => '__root__',
   ),
   'versions' => 
@@ -41,7 +41,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => '1b62d88bf76f07c19deef3e1a0ea86c3f96b9171',
+      'reference' => '478f6727aebc8686a2d407808946c198e4da9597',
     ),
     'psr/cache' => 
     array (
@@ -355,6 +355,15 @@ private static $installed = array (
       array (
       ),
       'reference' => '130ac5175ad2fd417978baebd8062e2e6b2bc28b',
+    ),
+    'symfony/serializer' => 
+    array (
+      'pretty_version' => 'v5.2.0',
+      'version' => '5.2.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'bfb225b1bf797f9d6a3b6a8501927cc72e92b549',
     ),
     'symfony/service-contracts' => 
     array (

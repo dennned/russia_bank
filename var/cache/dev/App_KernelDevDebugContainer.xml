@@ -73,6 +73,7 @@
     <parameter key="router.resource">kernel::loadRoutes</parameter>
     <parameter key="request_listener.http_port">80</parameter>
     <parameter key="request_listener.https_port">443</parameter>
+    <parameter key="serializer.mapping.cache.file">/var/www/russia_bank/var/cache/dev/serialization.php</parameter>
     <parameter key="twig.form.resources" type="collection">
       <parameter>form_div_layout.html.twig</parameter>
     </parameter>
@@ -170,7 +171,7 @@
     <service id="error_controller" class="Symfony\Component\HttpKernel\Controller\ErrorController" public="true">
       <argument type="service" id="http_kernel"/>
       <argument>error_controller</argument>
-      <argument type="service" id="twig.error_renderer.html"/>
+      <argument type="service" id="error_handler.error_renderer.serializer"/>
     </service>
     <service id="exception_listener" class="Symfony\Component\HttpKernel\EventListener\ErrorListener">
       <tag name="kernel.event_subscriber"/>
@@ -1363,6 +1364,126 @@
     <service id="secrets.local_vault" class="Symfony\Bundle\FrameworkBundle\Secrets\DotenvVault">
       <argument>/var/www/russia_bank/.env.dev.local</argument>
     </service>
+    <service id="serializer" class="Symfony\Component\Serializer\Serializer" public="true">
+      <tag name="container.private" package="symfony/framework-bundle" version="5.2"/>
+      <argument type="collection">
+        <argument type="service" id="serializer.normalizer.problem"/>
+        <argument type="service" id="serializer.normalizer.json_serializable"/>
+        <argument type="service" id="serializer.normalizer.datetime"/>
+        <argument type="service" id="serializer.normalizer.constraint_violation_list"/>
+        <argument type="service" id="serializer.normalizer.datetimezone"/>
+        <argument type="service" id="serializer.normalizer.dateinterval"/>
+        <argument type="service" id="serializer.normalizer.uid"/>
+        <argument type="service" id="serializer.normalizer.form_error"/>
+        <argument type="service" id="serializer.normalizer.data_uri"/>
+        <argument type="service" id="serializer.denormalizer.array"/>
+      </argument>
+      <argument type="collection">
+        <argument type="service" id="serializer.encoder.xml"/>
+        <argument type="service" id="serializer.encoder.json"/>
+        <argument type="service" id="serializer.encoder.yaml"/>
+        <argument type="service" id="serializer.encoder.csv"/>
+      </argument>
+    </service>
+    <service id="serializer.mapping.class_discriminator_resolver" class="Symfony\Component\Serializer\Mapping\ClassDiscriminatorFromClassMetadata">
+      <argument type="service" id="serializer.mapping.cache_class_metadata_factory"/>
+    </service>
+    <service id="serializer.normalizer.constraint_violation_list" class="Symfony\Component\Serializer\Normalizer\ConstraintViolationListNormalizer">
+      <tag name="serializer.normalizer" priority="-915"/>
+      <argument type="collection"/>
+      <argument type="service" id="serializer.name_converter.metadata_aware"/>
+    </service>
+    <service id="serializer.normalizer.datetimezone" class="Symfony\Component\Serializer\Normalizer\DateTimeZoneNormalizer">
+      <tag name="serializer.normalizer" priority="-915"/>
+    </service>
+    <service id="serializer.normalizer.dateinterval" class="Symfony\Component\Serializer\Normalizer\DateIntervalNormalizer">
+      <tag name="serializer.normalizer" priority="-915"/>
+    </service>
+    <service id="serializer.normalizer.data_uri" class="Symfony\Component\Serializer\Normalizer\DataUriNormalizer">
+      <tag name="serializer.normalizer" priority="-920"/>
+      <argument>null</argument>
+    </service>
+    <service id="serializer.normalizer.datetime" class="Symfony\Component\Serializer\Normalizer\DateTimeNormalizer">
+      <tag name="serializer.normalizer" priority="-910"/>
+    </service>
+    <service id="serializer.normalizer.json_serializable" class="Symfony\Component\Serializer\Normalizer\JsonSerializableNormalizer">
+      <tag name="serializer.normalizer" priority="-900"/>
+    </service>
+    <service id="serializer.normalizer.problem" class="Symfony\Component\Serializer\Normalizer\ProblemNormalizer">
+      <tag name="serializer.normalizer" priority="-890"/>
+      <argument>true</argument>
+    </service>
+    <service id="serializer.normalizer.uid" class="Symfony\Component\Serializer\Normalizer\UidNormalizer">
+      <tag name="serializer.normalizer" priority="-915"/>
+    </service>
+    <service id="serializer.normalizer.form_error" class="Symfony\Component\Serializer\Normalizer\FormErrorNormalizer">
+      <tag name="serializer.normalizer" priority="-915"/>
+    </service>
+    <service id="serializer.normalizer.property" class="Symfony\Component\Serializer\Normalizer\PropertyNormalizer">
+      <argument type="service" id="serializer.mapping.cache_class_metadata_factory"/>
+      <argument type="service" id="serializer.name_converter.metadata_aware"/>
+      <argument>null</argument>
+      <argument type="service" id="serializer.mapping.class_discriminator_resolver" on-invalid="ignore"/>
+      <argument>null</argument>
+      <argument type="collection"/>
+    </service>
+    <service id="serializer.denormalizer.array" class="Symfony\Component\Serializer\Normalizer\ArrayDenormalizer">
+      <tag name="serializer.normalizer" priority="-990"/>
+    </service>
+    <service id="serializer.mapping.chain_loader" class="Symfony\Component\Serializer\Mapping\Loader\LoaderChain">
+      <argument type="collection"/>
+    </service>
+    <service id="serializer.mapping.cache_warmer" class="Symfony\Bundle\FrameworkBundle\CacheWarmer\SerializerCacheWarmer">
+      <tag name="kernel.cache_warmer"/>
+      <argument type="collection"/>
+      <argument>/var/www/russia_bank/var/cache/dev/serialization.php</argument>
+    </service>
+    <service id="serializer.mapping.cache.symfony" class="Psr\Cache\CacheItemPoolInterface">
+      <argument>/var/www/russia_bank/var/cache/dev/serialization.php</argument>
+      <argument type="service" id="cache.serializer"/>
+      <factory class="Symfony\Component\Cache\Adapter\PhpArrayAdapter" method="create"/>
+    </service>
+    <service id="serializer.mapping.cache_class_metadata_factory" class="Symfony\Component\Serializer\Mapping\Factory\CacheClassMetadataFactory">
+      <argument type="service" id="serializer.mapping.cache_class_metadata_factory.inner"/>
+      <argument type="service" id="serializer.mapping.cache.symfony"/>
+    </service>
+    <service id="serializer.encoder.xml" class="Symfony\Component\Serializer\Encoder\XmlEncoder">
+      <tag name="serializer.encoder"/>
+    </service>
+    <service id="serializer.encoder.json" class="Symfony\Component\Serializer\Encoder\JsonEncoder">
+      <tag name="serializer.encoder"/>
+    </service>
+    <service id="serializer.encoder.yaml" class="Symfony\Component\Serializer\Encoder\YamlEncoder">
+      <tag name="serializer.encoder"/>
+    </service>
+    <service id="serializer.encoder.csv" class="Symfony\Component\Serializer\Encoder\CsvEncoder">
+      <tag name="serializer.encoder"/>
+    </service>
+    <service id="serializer.name_converter.camel_case_to_snake_case" class="Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter"/>
+    <service id="serializer.name_converter.metadata_aware" class="Symfony\Component\Serializer\NameConverter\MetadataAwareNameConverter">
+      <argument type="service" id="serializer.mapping.cache_class_metadata_factory"/>
+    </service>
+    <service id="property_info.serializer_extractor" class="Symfony\Component\PropertyInfo\Extractor\SerializerExtractor">
+      <tag name="property_info.list_extractor" priority="-999"/>
+      <argument type="service" id="serializer.mapping.cache_class_metadata_factory"/>
+    </service>
+    <service id="error_handler.error_renderer.serializer" class="Symfony\Component\ErrorHandler\ErrorRenderer\SerializerErrorRenderer">
+      <argument type="service" id="serializer"/>
+      <argument type="service">
+        <service>
+          <argument type="service" id="request_stack"/>
+          <factory class="Symfony\Component\ErrorHandler\ErrorRenderer\SerializerErrorRenderer" method="getPreferredFormat"/>
+        </service>
+      </argument>
+      <argument type="service" id="twig.error_renderer.html"/>
+      <argument type="service">
+        <service>
+          <argument type="service" id="request_stack"/>
+          <argument>true</argument>
+          <factory class="Symfony\Component\ErrorHandler\ErrorRenderer\HtmlErrorRenderer" method="isDebug"/>
+        </service>
+      </argument>
+    </service>
     <service id="twig" class="Twig\Environment" public="true">
       <tag name="container.preload" class="Twig\Cache\FilesystemCache"/>
       <tag name="container.preload" class="Twig\Extension\CoreExtension"/>
@@ -1706,6 +1827,7 @@
         <argument key="parameter_bag" type="service" id="parameter_bag" on-invalid="ignore"/>
         <argument key="request_stack" type="service" id="request_stack" on-invalid="ignore"/>
         <argument key="router" type="service" id="router.default" on-invalid="ignore"/>
+        <argument key="serializer" type="service" id="serializer" on-invalid="ignore"/>
         <argument key="session" type="service" id="session" on-invalid="ignore"/>
         <argument key="twig" type="service" id="twig" on-invalid="ignore"/>
       </argument>
@@ -1791,6 +1913,9 @@
         <argument type="service" id="debug.argument_resolver.variadic"/>
         <argument type="service" id="debug.argument_resolver.not_tagged_controller"/>
       </argument>
+    </service>
+    <service id="serializer.mapping.cache_class_metadata_factory.inner" class="Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory">
+      <argument type="service" id="serializer.mapping.chain_loader"/>
     </service>
     <service id="debug.argument_resolver.request_attribute.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\RequestAttributeValueResolver"/>
     <service id="debug.argument_resolver.request.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\RequestValueResolver"/>
@@ -1942,7 +2067,7 @@
     <service id="Symfony\Component\DependencyInjection\ReverseContainer" alias="reverse_container"/>
     <service id="Symfony\Component\String\Slugger\SluggerInterface" alias="slugger"/>
     <service id="error_renderer.html" alias="twig.error_renderer.html"/>
-    <service id="error_renderer" alias="twig.error_renderer.html"/>
+    <service id="error_renderer" alias="error_handler.error_renderer.serializer"/>
     <service id="Psr\EventDispatcher\EventDispatcherInterface" alias="debug.event_dispatcher"/>
     <service id="Psr\Container\ContainerInterface $parameterBag" alias="parameter_bag"/>
     <service id="cache.app_clearer" alias="cache.default_clearer" public="true"/>
@@ -1967,6 +2092,16 @@
     <service id="Symfony\Component\Routing\Matcher\UrlMatcherInterface" alias="router.default"/>
     <service id="Symfony\Component\Routing\RequestContextAwareInterface" alias="router.default"/>
     <service id="Symfony\Component\Routing\RequestContext" alias="router.request_context"/>
+    <service id="Symfony\Component\Serializer\SerializerInterface" alias="serializer"/>
+    <service id="Symfony\Component\Serializer\Normalizer\NormalizerInterface" alias="serializer"/>
+    <service id="Symfony\Component\Serializer\Normalizer\DenormalizerInterface" alias="serializer"/>
+    <service id="Symfony\Component\Serializer\Encoder\EncoderInterface" alias="serializer"/>
+    <service id="Symfony\Component\Serializer\Encoder\DecoderInterface" alias="serializer"/>
+    <service id="Symfony\Component\Serializer\Mapping\ClassDiscriminatorResolverInterface" alias="serializer.mapping.class_discriminator_resolver"/>
+    <service id="Symfony\Component\Serializer\Normalizer\ObjectNormalizer" alias="serializer.normalizer.object"/>
+    <service id="Symfony\Component\Serializer\Normalizer\PropertyNormalizer" alias="serializer.normalizer.property"/>
+    <service id="Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactoryInterface" alias="serializer.mapping.cache_class_metadata_factory"/>
+    <service id="error_renderer.serializer" alias="error_handler.error_renderer.serializer"/>
     <service id="Twig_Environment" alias="twig"/>
     <service id="Twig\Environment" alias="twig"/>
     <service id="container.env_var_processors_locator" alias=".service_locator.Kbr2i2X" public="true"/>
@@ -1977,6 +2112,7 @@
     <service id="event_dispatcher" alias="debug.event_dispatcher" public="true"/>
     <service id="controller_resolver" alias="debug.controller_resolver"/>
     <service id="argument_resolver" alias="debug.argument_resolver"/>
+    <service id="serializer.mapping.class_metadata_factory" alias="serializer.mapping.cache_class_metadata_factory"/>
     <service id="twig.error_renderer.html.inner" alias="error_handler.error_renderer.html"/>
     <service id="argument_resolver.request_attribute" alias="debug.argument_resolver.request_attribute"/>
     <service id="argument_resolver.request" alias="debug.argument_resolver.request"/>
