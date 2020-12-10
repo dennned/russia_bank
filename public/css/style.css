@@ -1,7 +1,32 @@
 section {
     margin: auto;
-    width: 70em;
+    width: 100em;
 }
 h1 {
     text-align: center;
+}
+.error {
+    color: red;
+}
+article {
+    display: inline-block;
+    width: 100%;
+}
+.result {
+    border: 1px solid #ccc;
+}
+article div {
+    float: left;
+    padding: 0 10% 0 0;
+}
+.header {
+    font-weight: bold;
+    border-bottom: 1px solid #ccc;
+    padding: 0 0 20px 0;
+}
+.value {
+    float: right;
+}
+.now {
+    float: right;
 }

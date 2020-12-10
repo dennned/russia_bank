@@ -8,7 +8,74 @@
     <body>
         <section>
             <h1>Bank RF - Info</h1>
-            <h2>{{ controller_name }}</h2>
+
+            {% if error is defined %}
+                <div class = "error">{{ error }}</div>
+            {% endif %}
+
+            {% if data is defined %}
+
+                <form action="/" method="get">
+                    <div>
+                        <label for="currencies ">Currencies :</label>
+                        <select type="select" name="currencies">
+                            <option value="">---</option>
+                            {% if currencies is not empty %}
+                                {% for val in currencies %}
+                                    <option value="{{ val.id }}">{{ val.name }}</option>
+                                {% endfor %}
+                            {% endif %}
+                        </select>
+                    </div>
+                    <div>
+                        <label for="date_from">From Date (dd/mm/yyyy) :</label>
+                        <input type="text" name="date_from" placeholder="{{ "now"|date("d/m/Y") }}"/>
+                    </div>
+                    <div>
+                        <label for="date_to">To Date (dd/mm/yyyy) :</label>
+                        <input type="text" name="date_to" placeholder="{{ "now"|date("d/m/Y") }}"/>
+                    </div>
+                    <div>
+                        <label for="date_to">Results by page :</label>
+                        <input type="text" name="by_page" placeholder="10"/>
+                    </div>
+                    <div>
+                        <label for="export">Export to json</label>
+                        <input type="checkbox" name="export" />
+
+                        {% if file is not empty %}
+                            <a href="{{ file }}">DOWNLOAD FILE json</a>
+                        {% endif %}
+
+                    </div>
+                    <div class="button">
+                        <input type="submit" value="Filter"/>
+                    </div>
+                </form>
+
+                <section class="result">
+                    <span class="now">* {{ "now"|date("d/m/Y") }}</span>
+                    <article class="header">
+                        <div>ID</div>
+                        <div>NumCode</div>
+                        <div>CharCode</div>
+                        <div>Nominal</div>
+                        <div>Name</div>
+                        <div class="value">Value</div>
+                    </article>
+
+                    {% for val in data %}
+                        <article>
+                            <div>{{ val.id }}</div>
+                            <div>{{ val.numCode }}</div>
+                            <div>{{ val.charCode }}</div>
+                            <div>{{ val.nominal }}</div>
+                            <div>{{ val.name }}</div>
+                            <div class="value">{{ val.value }}</div>
+                        </article>
+                    {% endfor %}
+                </section>
+            {% endif %}
         </section>
     </body>
 </html>
