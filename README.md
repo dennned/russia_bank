@@ -4,4 +4,8 @@ Run :
 - docker-compose build
 - docker-compose up
 
-http://localhost:8099
+project http://localhost:8099
+
+phpmyadmin http://localhost:8082/
+
+

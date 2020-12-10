@@ -1,16 +1,25 @@
 <?php return array (
   'root' => 
   array (
-    'pretty_version' => 'v5.2.99',
-    'version' => '5.2.99.0',
+    'pretty_version' => 'dev-master',
+    'version' => 'dev-master',
     'aliases' => 
     array (
     ),
-    'reference' => NULL,
-    'name' => 'symfony/skeleton',
+    'reference' => '1b62d88bf76f07c19deef3e1a0ea86c3f96b9171',
+    'name' => '__root__',
   ),
   'versions' => 
   array (
+    '__root__' => 
+    array (
+      'pretty_version' => 'dev-master',
+      'version' => 'dev-master',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '1b62d88bf76f07c19deef3e1a0ea86c3f96b9171',
+    ),
     'psr/cache' => 
     array (
       'pretty_version' => '1.0.1',
@@ -340,14 +349,14 @@
         0 => '1.0',
       ),
     ),
-    'symfony/skeleton' => 
+    'symfony/stopwatch' => 
     array (
-      'pretty_version' => 'v5.2.99',
-      'version' => '5.2.99.0',
+      'pretty_version' => 'v5.2.0',
+      'version' => '5.2.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => NULL,
+      'reference' => '2b105c0354f39a63038a1d8bf776ee92852813af',
     ),
     'symfony/string' => 
     array (
@@ -357,6 +366,33 @@
       array (
       ),
       'reference' => '40e975edadd4e32cd16f3753b3bad65d9ac48242',
+    ),
+    'symfony/translation-contracts' => 
+    array (
+      'pretty_version' => 'v2.3.0',
+      'version' => '2.3.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'e2eaa60b558f26a4b0354e1bbb25636efaaad105',
+    ),
+    'symfony/twig-bridge' => 
+    array (
+      'pretty_version' => 'v5.2.0',
+      'version' => '5.2.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '909d736d0413a072ebd5db8e0f87b8808efd4849',
+    ),
+    'symfony/twig-bundle' => 
+    array (
+      'pretty_version' => 'v5.2.0',
+      'version' => '5.2.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '954b642ce585c7f20795f30aba53eb27eeb1a91f',
     ),
     'symfony/var-dumper' => 
     array (
@@ -376,6 +412,15 @@
       ),
       'reference' => 'fbc3507f23d263d75417e09a12d77c009f39676c',
     ),
+    'symfony/web-profiler-bundle' => 
+    array (
+      'pretty_version' => 'v5.2.0',
+      'version' => '5.2.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'a1f3f170e785d3c371396ac4935c27504fcfca16',
+    ),
     'symfony/yaml' => 
     array (
       'pretty_version' => 'v5.2.0',
@@ -384,6 +429,15 @@
       array (
       ),
       'reference' => 'bb73619b2ae5121bbbcd9f191dfd53ded17ae598',
+    ),
+    'twig/twig' => 
+    array (
+      'pretty_version' => 'v3.1.1',
+      'version' => '3.1.1.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'b02fa41f3783a2616eccef7b92fbc2343ffed737',
     ),
   ),
 );
